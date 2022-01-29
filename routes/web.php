@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,22 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::group(["middleware" => [],], function (){
+    $goupData = [
+        "namespace" => "App\Http\Controllers\Blog\Admin",
+        "prefix" => "admin",
+    ];
+
+    Route::group($goupData, function(){
+        Route::resource("index", "MainController")->names("blog.admin.index");
+    });
+
+});
+
+Route::get('user/index', "App\Http\Controllers\Blog\User\MainController@index");
+Route::get('disabled/index', "App\Http\Controllers\Blog\Disabled\MainController@index");
